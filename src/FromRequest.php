@@ -115,6 +115,19 @@ trait FromRequest
             }
         }
 
+        // Null filters
+        foreach ($request->input("$namespace.null", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->whereNull($key);
+            }
+        }
+
+        foreach ($request->input("$namespace.not_null", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->whereNotNull($key);
+            }
+        }
+
         return $query;
     }
 }
