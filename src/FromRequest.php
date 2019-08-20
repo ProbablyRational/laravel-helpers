@@ -41,6 +41,48 @@ trait FromRequest
             }
         }
 
+        foreach ($request->input("$namespace.not", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "!=", $value);
+            }
+        }
+
+        foreach ($request->input("$namespace.like", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "like", "%$value%");
+            }
+        }
+
+        foreach ($request->input("$namespace.not_like", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "not like", "%$value%");
+            }
+        }
+
+        foreach ($request->input("$namespace.starts", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "like", "$value%");
+            }
+        }
+
+        foreach ($request->input("$namespace.not_starts", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "not like", "$value%");
+            }
+        }
+
+        foreach ($request->input("$namespace.ends", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "like", "%$value");
+            }
+        }
+
+        foreach ($request->input("$namespace.not_ends", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "not like", "%$value");
+            }
+        }
+
         return $query;
     }
 }
