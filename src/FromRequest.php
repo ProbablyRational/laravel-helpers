@@ -83,6 +83,31 @@ trait FromRequest
             }
         }
 
+        // Number filters
+        foreach ($request->input("$namespace.lt", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "<", intval($value));
+            }
+        }
+
+        foreach ($request->input("$namespace.gt", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, ">", intval($value));
+            }
+        }
+
+        foreach ($request->input("$namespace.lte", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "<=", intval($value));
+            }
+        }
+
+        foreach ($request->input("$namespace.gte", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, ">=", intval($value));
+            }
+        }
+
         return $query;
     }
 }
