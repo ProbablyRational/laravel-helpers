@@ -108,6 +108,13 @@ trait FromRequest
             }
         }
 
+        // Bool filters
+        foreach ($request->input("$namespace.is", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, boolval($value));
+            }
+        }
+
         return $query;
     }
 }
