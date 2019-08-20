@@ -1,0 +1,21 @@
+{
+    "name": "probablyrational/laravel-helpers",
+    "description": "A collection of helper traits for laravel used by Probably Rational Ltd.",
+    "require": {
+        "php": "^7.1|^8.0",
+        "nesbot/carbon": "3.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Probablyrational\\LaravelHelpers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Zachary Claret-Scott",
+            "email": "zachary.claretscott@probablyrational.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
