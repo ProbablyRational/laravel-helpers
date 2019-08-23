@@ -128,6 +128,18 @@ trait FromRequest
             }
         }
 
+        // Date filters
+        foreach ($request->input("$namespace.before", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, "<=", Carbon::parse($value));
+            }
+        }
+        foreach ($request->input("$namespace.after", []) as $key => $value) {
+            if ($this->isValidField($key)) {
+                $query = $query->where($key, ">=", Carbon::parse($value));
+            }
+        }
+
         return $query;
     }
 }
