@@ -179,6 +179,16 @@ trait FromRequest
             }
         }
 
+        // Ordering
+        $column = $request->input("$namespace.order.column", "id");
+        $order = $request->input("$namespace.order.direction", "asc");
+        if ($this->isValidField($column) && in_array($order, ["asc", "desc"])) {
+            $query = $query->orderBy($column, $order);
+        }
+        if ($order == "rnd") {
+            $query = $query->inRandomOrder();
+        }
+
         return $query;
     }
 }
