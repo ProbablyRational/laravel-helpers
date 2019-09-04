@@ -28,10 +28,14 @@ trait FromRequest
      * @param Request $request
      * @return Builder
      */
-    public function scopeFromRequest(Builder $query, Request $request): Builder
+    public function scopeFromRequest(Builder $query, Request $request, $namespace = null): Builder
     {
         if(is_null($request)) {
             return $query;
+        }
+
+        if(is_null($namespace)) {
+            $namespace = $this->requestNameSpace;
         }
 
         // String filters
@@ -137,6 +141,41 @@ trait FromRequest
         foreach ($request->input("$namespace.after", []) as $key => $value) {
             if ($this->isValidField($key)) {
                 $query = $query->where($key, ">=", Carbon::parse($value));
+            }
+        }
+
+        // Relationship checkers
+        foreach ($request->input("$namespace.has", []) as $key => $value) {
+            if (in_array($key, $this->relationships)) {
+                if($key === "user" && $value === "me") {
+                    $query = $query->where('user_id', Auth::id());
+                } else if(is_numeric($value)) {
+                    $query = $query->where($key . '_id', $value);
+                } else {
+                    $query = $query->whereHas(
+                        $key,
+                        function (Builder $sub_query) use ($request, $namespace, $key) {
+                            $sub_query->fromRequest($request, "$namespace.has_not.$key");
+                        }
+                    );
+                }
+            }
+        }
+
+        foreach ($request->input("$namespace.has_not", []) as $key => $value) {
+            if (in_array($key, $this->relationships)) {
+                if($key === "user" && $value === "me") {
+                    $query = $query->where('user_id', '!=', Auth::id());
+                } else if(is_numeric($value)) {
+                    $query = $query->where($key . '_id', '!=', $value);
+                } else {
+                    $query = $query->whereDoesntHave(
+                        $key,
+                        function (Builder $sub_query) use ($request, $namespace, $key) {
+                            $sub_query->fromRequest($request, "$namespace.has_not.$key");
+                        }
+                    );
+                }
             }
         }
 
