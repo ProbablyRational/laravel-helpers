@@ -144,6 +144,15 @@ trait FromRequest
             }
         }
 
+        // Geolocation filters
+        $lat = $request->input("$namespace.within.lat");
+        $lng = $request->input("$namespace.within.lng");
+        $distance = $request->input("$namespace.within.distance");
+        $measurement = $request->input("$namespace.within.measurement", "miles");
+        if(!is_null($lat) && !is_null($lng) && !is_null($distance) && in_array($measurement, ["miles", "m", "kilometers", "km", "nautical_miles", "feet"])) {
+            $query = $query->within($distance, $measurement, $lat, $lng);
+        }
+
         // Relationship checkers
         foreach ($request->input("$namespace.has", []) as $key => $value) {
             if (in_array($key, $this->relationships)) {
