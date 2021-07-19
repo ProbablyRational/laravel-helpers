@@ -38,6 +38,40 @@ trait FromRequest
             $namespace = $this->requestNameSpace;
         }
 
+        /// This will only work on resources for now
+        ///
+        /// This whole thing needs to be moved into a sub query just for the orWhereHas() stuff, I dont like that it has the foreach $namespace.where within the loop
+        foreach ($request->input("$namespace.below", []) as $key => $value) {
+            if (in_array($key, $this->relationships)) {
+                $whereHas = $key;
+                $depth = 3;
+                for ($d = 0; $depth >= $d; $d++) {
+                    if($d == $depth) {
+                        $query = $query->whereHas(
+                            $whereHas,
+                            function (Builder $sub_query) use ($request, $namespace, $key) {
+                                $sub_query->fromRequest($request, "$namespace.below.$key");
+                            }
+                        );
+                    } else {
+                        $query = $query->orWhereHas(
+                            $whereHas,
+                            function (Builder $sub_query) use ($request, $namespace, $key) {
+                                $sub_query->fromRequest($request, "$namespace.below.$key");
+                            }
+                        );
+
+                        foreach ($request->input("$namespace.where", []) as $key2 => $value2) {
+                            if ($this->isValidField($key2)) {
+                                $query = $query->where($key2, $value2);
+                            }
+                        }
+                    }
+                    $whereHas = $whereHas . '.' . $key;
+                }
+            }
+        }
+
         // String filters
         foreach ($request->input("$namespace.where", []) as $key => $value) {
             if ($this->isValidField($key)) {
