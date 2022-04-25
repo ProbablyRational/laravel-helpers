@@ -3,7 +3,7 @@
     "description": "A collection of helper traits for laravel used by Probably Rational Ltd.",
     "require": {
         "php": "^7.1|^8.0",
-        "nesbot/carbon": "3.x-dev"
+        "nesbot/carbon": "^2.0|3.x-dev"
     },
     "license": "MIT",
     "autoload": {
