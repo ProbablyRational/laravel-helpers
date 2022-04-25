@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace ProbablyRational\LaravelHelpers;
 
 use Closure;
 use Auth;
