@@ -8,7 +8,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Probablyrational\\LaravelHelpers\\": "src/"
+            "ProbablyRational\\LaravelHelpers\\": "src/"
         }
     },
     "authors": [
