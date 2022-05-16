@@ -18,7 +18,7 @@ trait FromRequest
      */
     private function isValidField($field): bool
     {
-        return in_array($field, $this->fillable) || Str::startsWith($field, 'meta->') || Str::endsWith($field, 'id');
+        return in_array($field, $this->fillable) || Str::startsWith($field, 'meta->') || Str::endsWith($field, 'id') || Str::endsWith($field, 'at');
     }
 
     /**
