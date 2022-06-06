@@ -198,7 +198,7 @@ trait FromRequest
                     $query = $query->whereHas(
                         $key,
                         function (Builder $sub_query) use ($request, $namespace, $key) {
-                            $sub_query->fromRequest($request, "$namespace.has_not.$key");
+                            $sub_query->fromRequest($request, "$namespace.has.$key");
                         }
                     );
                 }
